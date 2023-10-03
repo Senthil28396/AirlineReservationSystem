@@ -10,6 +10,6 @@ import com.airline.ticketbooking.model.Reservation;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
-	List<Reservation> findByPassanger(int passanger);
+	//List<Reservation> findByPassanger(int passanger);
 
 }

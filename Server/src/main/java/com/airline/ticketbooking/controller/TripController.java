@@ -35,22 +35,22 @@ public class TripController {
 	{
 		return tripService.getTrip(id);
 	}
-	@GetMapping    
-	public List<Trip> getAllTrips(){
-		return tripService.getAllTrips();
-	}
-	@PutMapping("/{id}")
-	public String updateTrip(@RequestBody Trip trip,@PathVariable int id)
-	{
-		tripService.updateTrip(trip,id);
-		return "updated successfully";
-	}
-	@DeleteMapping("/{id}")
-	public String deleteTrip(@PathVariable int id)
-	{
-		tripService.deleteTrip(id);
-		return "Successfully Deleted Trip record";
-	}
-	
+//	@GetMapping    
+//	public List<Trip> getAllTrips(){
+//		return tripService.getAllTrips();
+//	}
+//	@PutMapping("/{id}")
+//	public String updateTrip(@RequestBody Trip trip,@PathVariable int id)
+//	{
+//		tripService.updateTrip(trip,id);
+//		return "updated successfully";
+//	}
+//	@DeleteMapping("/{id}")
+//	public String deleteTrip(@PathVariable int id)
+//	{
+//		tripService.deleteTrip(id);
+//		return "Successfully Deleted Trip record";
+//	}
+//	
 	
 }

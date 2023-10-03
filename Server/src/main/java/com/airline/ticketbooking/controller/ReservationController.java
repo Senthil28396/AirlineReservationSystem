@@ -30,25 +30,25 @@ public class ReservationController {
 	   }
 	    
 	    @GetMapping
-	    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	   // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	    public List<Reservation> getAllReservations() {
 	        return reservationService.getAllReservations();
 	    }
 
 	    @GetMapping("/{id}")
-		@PreAuthorize("hasAuthority('ROLE_USER')")
+		//@PreAuthorize("hasAuthority('ROLE_USER')")
 	    public Reservation getReservationById(@PathVariable int id) {
 	        return reservationService.getReservationById(id);
 	    }
 
 	    @GetMapping("/passenger/{passanger}")
-		@PreAuthorize("hasAuthority('ROLE_USER')")
+		//@PreAuthorize("hasAuthority('ROLE_USER')")
 	    public List<Reservation> getReservationsByPassenger(@PathVariable int passanger) {
 	        return reservationService.getReservationsByPassengerId(passanger);
 	    }
 	    
 	    @DeleteMapping("/{id}")
-	    @PreAuthorize("hasAuthority('ROLE_USER')")
+	   // @PreAuthorize("hasAuthority('ROLE_USER')")
 	    public String deleteReservation(@PathVariable int id) {
 	    	 reservationService.deleteReservation(id);
 	    	 return "Successfully Deleted Reservation";

@@ -1,50 +1,61 @@
 package com.airline.ticketbooking.model;
 
-import java.security.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalTime;
+
+
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 @Entity
 public class Trip {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "trip_generator")
+	@SequenceGenerator(name = "trip_generator",sequenceName = "trip_seq", allocationSize = 1)
 	private int id;
 	private String departure;
 	private String arrival;
-	private LocalDate depatureDate;
-	private LocalDate arrivalDate;
-	private LocalTime depatureTime;
-	private LocalTime arrivalTime;
+	private Date depatureDate;
+	private Date arrivalDate;
 	private String duration;
 	private int availableSeats;
 	private boolean status;
 	private int pricePerSeat;
+	@CreationTimestamp
 	private Timestamp createAt;
 	
 	
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "flight_id")
+    @JsonBackReference
+    private Flight flight;
+
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="trip_id")
+	@JoinColumn(name="trip")
 	private List<Reservation> reservation;
-
-	@ManyToMany(mappedBy="trips")
-	private List<Passanger> passengers;
-
 	
 	public Trip() {
 		super();
 	}
 	
-	public Trip(int id, String departure, String arrival, LocalDate depatureDate, LocalDate arrivalDate,
-			LocalTime depatureTime, LocalTime arrivalTime, String duration, int availableSeats, boolean status,
+	public Trip(int id, String departure, String arrival, Date depatureDate, Date arrivalDate,
+			String duration, int availableSeats, boolean status,
 			int pricePerSeat, Timestamp createAt) {
 		super();
 		this.id = id;
@@ -52,8 +63,6 @@ public class Trip {
 		this.arrival = arrival;
 		this.depatureDate = depatureDate;
 		this.arrivalDate = arrivalDate;
-		this.depatureTime = depatureTime;
-		this.arrivalTime = arrivalTime;
 		this.duration = duration;
 		this.availableSeats = availableSeats;
 		this.status = status;
@@ -78,30 +87,25 @@ public class Trip {
 	public void setArrival(String arrival) {
 		this.arrival = arrival;
 	}
-	public LocalDate getDepatureDate() {
+	public Date getDepatureDate() {
 		return depatureDate;
 	}
-	public void setDepatureDate(LocalDate depatureDate) {
+	public void setDepatureDate(Date depatureDate) {
 		this.depatureDate = depatureDate;
 	}
-	public LocalDate getArrivalDate() {
+	public Date getArrivalDate() {
 		return arrivalDate;
 	}
-	public void setArrivalDate(LocalDate arrivalDate) {
+	public void setArrivalDate(Date arrivalDate) {
 		this.arrivalDate = arrivalDate;
 	}
-	public LocalTime getDepatureTime() {
-		return depatureTime;
-	}
-	public void setDepatureTime(LocalTime depatureTime) {
-		this.depatureTime = depatureTime;
-	}
-	public LocalTime getArrivalTime() {
-		return arrivalTime;
-	}
-	public void setArrivalTime(LocalTime arrivalTime) {
-		this.arrivalTime = arrivalTime;
-	}
+
+	/*
+	 * public Date getDepatureTime() { return depatureTime; } public void
+	 * setDepatureTime(Date depatureTime) { this.depatureTime = depatureTime; }
+	 * public Date getArrivalTime() { return arrivalTime; } public void
+	 * setArrivalTime(Date arrivalTime) { this.arrivalTime = arrivalTime; }
+	 */
 	public String getDuration() {
 		return duration;
 	}
@@ -131,6 +135,22 @@ public class Trip {
 	}
 	public void setCreateAt(Timestamp createAt) {
 		this.createAt = createAt;
+	}
+
+	public List<Reservation> getReservation() {
+		return reservation;
+	}
+
+	public void setReservation(List<Reservation> reservation) {
+		this.reservation = reservation;
+	}
+
+	public Flight getFlight() {
+		return flight;
+	}
+
+	public void setFlight(Flight flight) {
+		this.flight = flight;
 	}
 	
 }

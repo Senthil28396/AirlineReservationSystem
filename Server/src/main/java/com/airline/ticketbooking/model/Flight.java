@@ -1,32 +1,48 @@
 package com.airline.ticketbooking.model;
 
-import java.security.Timestamp;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
+
+import java.sql.Timestamp;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 
 @Entity
 public class Flight {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "flight_generator")
+	@SequenceGenerator(name = "flight_generator",sequenceName = "flight_seq", allocationSize = 1)
 	private int id;
 	@Column(nullable = false,unique = true)
 	private String flightNumber;
 	private String flightName;
 	private int totalSeats;
 	private boolean status;
+	@CreationTimestamp
 	private Timestamp createdAt;
+	
+    @OneToMany(mappedBy ="flight",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Trip> trips;
+
+	
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinColumn(name="flight_id")
+//	private List<Trip> trips;
+
 
 	public Flight(int id, String flightNumber, String flightName, String flightType, int totalSeats, boolean status,
 			Timestamp createdAt) {
@@ -38,7 +54,8 @@ public class Flight {
 		this.status = status;
 		this.createdAt = createdAt;
 	}
-
+	
+	
 	public Flight() {
 		super();
 	}
@@ -89,6 +106,14 @@ public class Flight {
 
 	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public List<Trip> getTrips() {
+		return trips;
+	}
+
+	public void setTrips(List<Trip> trips) {
+		this.trips = trips;
 	}
 
 	

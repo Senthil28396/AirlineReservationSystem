@@ -1,5 +1,6 @@
 package com.airline.ticketbooking.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,26 +42,17 @@ public class Passanger {
 	@Column(unique = true)
 	private String passportNumber;
 	private String nationality;
-	@JsonIgnore
-	private String token;
+	private int pincode;
+	private Timestamp createdAt;
+	private String role;
 	
-	@JsonIgnore
-	@Column(columnDefinition = "TIMESTAMP")
-	private LocalDateTime tokenCreationDate;
-	
-	//@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	@JoinTable(name = "passanger_role", joinColumns = @JoinColumn(name = "passanger_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
-
-	@OneToMany(mappedBy = "passanger")
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="passenger")
 	private List<Reservation> reservation;
 	
-	
-
 	public Passanger(Long id, String firstName, String lastName, String gender, String phoneNumber, String password,
-			String email, int age, String address, String passportNumber, String nationality, String token,
-			LocalDateTime tokenCreationDate) {
+			String email,int age, String address, String passportNumber, String nationality, int pincode,
+			Timestamp createdAt,String role) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -73,8 +65,9 @@ public class Passanger {
 		this.address = address;
 		this.passportNumber = passportNumber;
 		this.nationality = nationality;
-		this.token = token;
-		this.tokenCreationDate = tokenCreationDate;
+		this.pincode = pincode;
+		this.createdAt = createdAt;
+		this.role=role;
 	}
 
 	public Passanger() {
@@ -105,14 +98,6 @@ public class Passanger {
 		this.lastName = lastName;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public String getGender() {
 		return gender;
 	}
@@ -128,6 +113,7 @@ public class Passanger {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -152,6 +138,14 @@ public class Passanger {
 		this.age = age;
 	}
 
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public String getPassportNumber() {
 		return passportNumber;
 	}
@@ -168,30 +162,32 @@ public class Passanger {
 		this.nationality = nationality;
 	}
 
-	public String getToken() {
-		return token;
+	public int getPincode() {
+		return pincode;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setPincode(int pincode) {
+		this.pincode = pincode;
 	}
 
-	public LocalDateTime getTokenCreationDate() {
-		return tokenCreationDate;
+	public Timestamp getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setTokenCreationDate(LocalDateTime tokenCreationDate) {
-		this.tokenCreationDate = tokenCreationDate;
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
 	}
-	public Set<Role> getRoles() {
-		return roles;
+	
+
+		public String getRole() {
+		return role;
 	}
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
-	public List<Reservation> getReservation() {
+		public List<Reservation> getReservation() {
 		return reservation;
 	}
 
@@ -199,26 +195,6 @@ public class Passanger {
 		this.reservation = reservation;
 	}
 
-	public void addRoles(Role role) {
-		this.roles.add(role);
-		role.getPassanger().add(this);
-	}	
 	
-	public void removeRole(Role role) {
-		this.getRoles().remove(role);
-		role.getPassanger().remove(this);
-	}
-
-	public void removeRoles() {
-		for (Role role : new HashSet<>(roles)) {
-			removeRole(role);
-		}
-	}
-	
-    public void addReservation(Reservation review) {
-        this.reservation.add(review);
-//        review.setPassanger(this);
-    }
-
 
 }

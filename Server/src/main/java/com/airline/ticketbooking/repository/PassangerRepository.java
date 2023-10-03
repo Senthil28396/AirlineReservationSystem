@@ -10,11 +10,11 @@ import com.airline.ticketbooking.model.Passanger;
 @Repository
 public interface PassangerRepository extends JpaRepository<Passanger, Long> {
 	
-    List<Passanger> findByEmail(String email);
-
-    Passanger getByEmail(String email);
-
-    Passanger findByToken(String token);
-
-	Optional<Passanger> findByName(String username);
+//    List<Passanger> findByEmail(String email);
+//
+//    Passanger getByEmail(String email);
+//
+//    Passanger findByToken(String token);
+//
+//	Optional<Passanger> findByName(String username);
 }

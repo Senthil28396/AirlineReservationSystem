@@ -16,15 +16,7 @@ public class Reservation {
 	@Id
 	@GeneratedValue
 	private int id;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="passanger_id")
-	private Passanger passanger;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="flight_number")
-	private Flight flight;
-	
+		
 	private int numberOfPassangers;
 	private Timestamp bookedAt;
 	private Timestamp cancelledAt;
@@ -32,8 +24,7 @@ public class Reservation {
 	private String paymentStatus;
 	private String paymentMode;
 	private String transactionId;
-	private int totalPrice;
-	
+	private int totalPrice;	
 	
 	public Reservation() {
 		super();
@@ -104,7 +95,5 @@ public class Reservation {
 	}
 	public void setTotalPrice(int totalPrice) {
 		this.totalPrice = totalPrice;
-	}
-	
-
+	}	
 	}

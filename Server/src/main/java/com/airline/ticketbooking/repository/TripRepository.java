@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.airline.ticketbooking.model.Trip;
 @Repository
-public interface TripRepository extends JpaRepository<Trip, Long> {
+public interface TripRepository extends JpaRepository<Trip, Integer> {
 	
 }

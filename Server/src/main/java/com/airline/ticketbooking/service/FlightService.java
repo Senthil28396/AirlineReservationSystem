@@ -26,14 +26,14 @@ public class FlightService {
 	@Autowired
 	FlightRepository flightRepository;
 	
-	/*public void addFlight(Flight flight)
+	public void addFlight(Flight flight)
 	{
-		LocalTime depatureTime=flight.getDepatureTime();
-		LocalTime arrivalTime=flight.getArrivalTime();
-		String difference=timeDiff(depatureTime,arrivalTime);
-	    flight.setDuration(difference);
+//		LocalTime depatureTime=flight.getDepatureTime();
+//		LocalTime arrivalTime=flight.getArrivalTime();
+//		String difference=timeDiff(depatureTime,arrivalTime);
+//	    flight.setDuration(difference);
 		flightRepository.save(flight);
-	}*/
+	}
 	
 	public Flight getFlight(int id)
 	{
