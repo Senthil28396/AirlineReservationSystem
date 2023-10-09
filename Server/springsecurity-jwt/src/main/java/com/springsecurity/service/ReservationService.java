@@ -2,15 +2,21 @@ package com.springsecurity.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.springsecurity.entity.Passanger;
 import com.springsecurity.entity.Reservation;
 import com.springsecurity.entity.Trip;
+import com.springsecurity.exception.PassangerNotFoundException;
 import com.springsecurity.exception.ReservationNotFoundException;
+import com.springsecurity.repository.PassangersRepository;
 import com.springsecurity.repository.ReservationRepository;
 import com.springsecurity.repository.TripRepository;
 
@@ -22,6 +28,9 @@ public class ReservationService {
 
 	@Autowired
 	TripRepository tripRepository;
+	
+	@Autowired
+	PassangersRepository passangersRepository;
 
 	/*
 	 * public void saveReservation(Reservation reservation) {
@@ -30,7 +39,7 @@ public class ReservationService {
 	 * reservationRepository.save(reservation); }
 	 */
 
-	public void saveReservation(Reservation reservation) {
+	/*public void saveReservation(Reservation reservation) {
 		reservation.setBookedAt(new Timestamp(System.currentTimeMillis()));
 
 		Trip trip = tripRepository.findById(reservation.getTrip().getId());
@@ -52,13 +61,49 @@ public class ReservationService {
 
 			tripRepository.save(trip);
 
-//			reservationRepository.save(reservation);
-
 		} else {
 			throw new ReservationNotFoundException("Reservation is ended");
 		}
-	} // worked.......
+	}*/
+	// worked.......
 
+	public void saveReservation(Reservation reservation) throws PassangerNotFoundException {
+      
+
+	    UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+	    Passanger passenger = passangersRepository.findByEmail(userDetails.getUsername());
+
+	    if (passenger != null) {
+	        reservation.setPassenger(passenger);
+	        
+	        Trip trip = tripRepository.findById(reservation.getTrip().getId());
+
+	        if (trip != null) {
+	            int pricePerSeat = trip.getPricePerSeat();
+	            int numberOfPassengers = reservation.getNumberOfPassangers();
+	            int totalPrice = pricePerSeat * numberOfPassengers;
+	            reservation.setTotalPrice(totalPrice);
+
+	            int remainingSeats = trip.getAvailableSeats() - numberOfPassengers;
+	            if (remainingSeats < 0) {
+	                throw new ReservationNotFoundException("Not enough available seats for this reservation.");
+	            }
+
+	            trip.setAvailableSeats(remainingSeats);
+	            Timestamp currentTimestamp = new Timestamp(new Date().getTime());
+	    	    reservation.setBookedAt(currentTimestamp);
+	            reservationRepository.save(reservation);
+	            tripRepository.save(trip);
+	        } else {
+	            throw new ReservationNotFoundException("Trip not found.");
+	        }
+	    } else {
+	        throw new PassangerNotFoundException("Passenger not found.");
+	    }
+	}
+
+	
 	public List<Reservation> getAllReservations() {
 
 		List<Reservation> reservation = reservationRepository.findAll();
@@ -95,6 +140,36 @@ public class ReservationService {
 
 		reservationRepository.deleteById(id);
 
+	}
+
+
+	public Reservation updateReservationById(int id) {
+	    Optional<Reservation> reservationOptional = reservationRepository.findById(id);
+
+	    if (reservationOptional.isPresent()) {
+	        Reservation reservation = reservationOptional.get();
+
+	        if (reservation.isStatus()) {
+	            reservation.setStatus(false);
+
+	            Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+	            reservation.setCancelledAt(currentTimestamp);
+
+	            Trip trip = reservation.getTrip();
+	            if (trip != null) {
+	                int numberOfPassengers = reservation.getNumberOfPassangers();
+	                int updatedAvailableSeats = trip.getAvailableSeats() + numberOfPassengers;
+	                trip.setAvailableSeats(updatedAvailableSeats);
+	                tripRepository.save(trip);
+	            }
+
+	            return reservationRepository.save(reservation);
+	        } else {
+	            throw new ReservationNotFoundException("Reservation is already canceled.");
+	        }
+	    } else {
+	        throw new ReservationNotFoundException("Reservation not found.");
+	    }
 	}
 
 }

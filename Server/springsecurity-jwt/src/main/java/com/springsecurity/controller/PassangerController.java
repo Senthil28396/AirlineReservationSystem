@@ -60,7 +60,7 @@ public class PassangerController {
 	@GetMapping("/get")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public List<Passanger> getAllPassangers() throws PassangerNotFoundException {
-		return passangerService.getAllPassangers();
+		return passangerService.getAllPassengers();
 	}
 
 	@PostMapping("/login")
@@ -75,13 +75,13 @@ public class PassangerController {
 	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 	public Passanger getPassanger(@PathVariable long id) throws PassangerNotFoundException {
 		return passangerService.getPassanger(id);
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_USER')")
+	@PreAuthorize("hasAuthority('USER')")
 	public String updatePassanger(@RequestBody Passanger passanger, @PathVariable long id)
 			throws PassangerNotFoundException {
 		passangerService.updatePassanger(passanger, id);
@@ -89,10 +89,20 @@ public class PassangerController {
 	}
 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_USER')")
+	@PreAuthorize("hasAuthority('USER')")
 	public String deletePassanger(@PathVariable long id) throws PassangerNotFoundException {
 		passangerService.deletePassanger(id);
 		return "Successfully Deleted Passanger record";
 	}
 
+//	@GetMapping("/")
+//    public List<Details> searchDetails(
+//            @RequestParam(required = false) String destination,  // Change variable name from 'name' to 'destination'
+//            @RequestParam(required = false) Integer id,          // Change variable name from 'id' to 'source'
+//            @RequestParam(required = false) String source,      // Change variable name from 'age' to 'source'
+//            @RequestParam(required = false) String date) {      // Change variable name from 'city' to 'date'
+//        return dservice.searchDetails(destination, id, source, date);
+//    }
+	
+	
 }

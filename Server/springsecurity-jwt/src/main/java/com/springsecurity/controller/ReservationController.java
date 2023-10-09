@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springsecurity.entity.Reservation;
+import com.springsecurity.exception.PassangerNotFoundException;
 import com.springsecurity.service.ReservationService;
 
 
@@ -25,22 +26,28 @@ public class ReservationController {
 	   ReservationService reservationService;
 
 	   @PostMapping
-	    public String createReservation(@RequestBody Reservation reservation) {
+	    public String createReservation(@RequestBody Reservation reservation) throws PassangerNotFoundException {
 	         reservationService.saveReservation(reservation);
 	         return "Added Reservation Successfully";
 	   }
 	    
 	    @GetMapping
-//	    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	    @PreAuthorize("hasAuthority('ADMIN')")
 	    public List<Reservation> getAllReservations() {
 	        return reservationService.getAllReservations();
 	    }
 
 	    @GetMapping("/{id}")
-//		@PreAuthorize("hasAuthority('ROLE_USER')")
+		@PreAuthorize("hasAuthority('USER')")
 	    public Reservation getReservationById(@PathVariable int id) {
 	        return reservationService.getReservationById(id);
 	    }
+	    
+	    @PutMapping("/{id}")
+	    public Reservation updateReservationById(@PathVariable int id) {
+	        return reservationService.updateReservationById(id);
+	    }
+	    
 
 	   /* @GetMapping("/passenger/{passanger}")
 //		@PreAuthorize("hasAuthority('ROLE_USER')")
@@ -49,7 +56,7 @@ public class ReservationController {
 	    }*/						//not yet worked
 	    
 	    @DeleteMapping("/{id}")
-//	    @PreAuthorize("hasAuthority('ROLE_USER')")
+	    @PreAuthorize("hasAuthority('USER')")
 	    public String deleteReservation(@PathVariable int id) {
 	    	 reservationService.deleteReservation(id);
 	    	 return "Successfully Deleted Reservation";
