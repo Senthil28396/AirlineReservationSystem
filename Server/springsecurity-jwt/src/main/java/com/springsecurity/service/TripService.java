@@ -2,6 +2,9 @@ package com.springsecurity.service;
 
 
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.springsecurity.entity.Flight;
 import com.springsecurity.entity.Passanger;
 import com.springsecurity.entity.Trip;
+import com.springsecurity.exception.FlightNotFoundException;
 import com.springsecurity.exception.TripNotFoundException;
 import com.springsecurity.repository.FlightRepository;
 import com.springsecurity.repository.TripRepository;
@@ -25,14 +29,48 @@ public class TripService {
 	@Autowired
 	FlightRepository flightRepository;
 	
-	public void addTrip(Trip trip)
+	/*public void addTrip(Trip trip)
 	{
 		Flight flight=flightRepository.findByFlightName(trip.getFlight().getFlightName());
         Timestamp currentTimestamp = new Timestamp(new Date().getTime());
         trip.setCreateAt(currentTimestamp);
         trip.setFlight(flight);
 		tripRepository.save(trip);
+	}*/
+	public void addTrip(Trip trip) {
+		Optional<Flight> flight=flightRepository.findById(trip.getFlight().getId());
+		
+		
+//	    Flight flight = flightRepository.findByFlightName(trip.getFlight().getFlightName());
+	    Timestamp currentTimestamp = new Timestamp(new Date().getTime());
+
+	    // Calculate the duration based on departure and arrival times
+	    LocalTime departureTime = trip.getDepatureTime();
+	    LocalTime arrivalTime = trip.getArrivalTime();
+	    long durationMinutes = Duration.between(departureTime, arrivalTime).toMinutes();
+
+	    // Convert duration to a suitable format
+	    long hours = durationMinutes / 60;
+	    long minutes = durationMinutes % 60;
+	    String duration = hours + "hrs " + minutes + "mins";
+
+	    // Set the calculated duration and other attributes
+	    trip.setDuration(duration);
+	    trip.setCreateAt(currentTimestamp);
+	    if(flight.isPresent()) {
+	    	Flight presentFlight=flight.get();
+		    trip.setFlight(presentFlight);
+
+	    }
+	    else {
+	    	throw new FlightNotFoundException("Flight "+trip.getFlight().getId()+ "is not present ");
+	    }
+//	    trip.setFlight(flight);
+
+	    // Save the trip to the database
+	    tripRepository.save(trip);
 	}
+
 	
 	public Trip getTrip(long id)
 	{
@@ -100,4 +138,7 @@ public class TripService {
 			throw new TripNotFoundException("no records found for this id"+id);
 		}
 	}
+	 public List<Trip> searchTrips(String departure, String arrival, LocalDate date) {
+	        return tripRepository.findByDepartureAndArrivalAndDepatureDate(departure, arrival, date);
+	    }
 }

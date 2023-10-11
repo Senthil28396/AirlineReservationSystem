@@ -2,6 +2,7 @@ package com.springsecurity.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class PassangerService {
 		@Autowired
 		private PassangersRepository passangerRepository;
 		
-		public List<Passanger> getAllPassangers() throws PassangerNotFoundException{
+		/*public List<Passanger> getAllPassangers() throws PassangerNotFoundException{
 			List<Passanger> passanger=(List<Passanger>) passangerRepository.findAll();
 			if(passanger!=null) {
 				return passanger;
@@ -29,7 +30,25 @@ public class PassangerService {
 			{ 
 				throw new PassangerNotFoundException("no passanger records found");
 			}
+		}*/
+		public List<Passanger> getAllPassengers() throws PassangerNotFoundException {
+		    List<Passanger> passengers = (List<Passanger>) passangerRepository.findAll();
+
+		    if (passengers != null && !passengers.isEmpty()) {
+		        List<Passanger> filteredPassengers = passengers.stream()
+		                .filter(passenger -> "USER".equals(passenger.getRole()))
+		                .collect(Collectors.toList());
+
+		        if (!filteredPassengers.isEmpty()) {
+		            return filteredPassengers;
+		        } else {
+		            throw new PassangerNotFoundException("No passenger records found with role 'USER'");
+		        }
+		    } else {
+		        throw new PassangerNotFoundException("No passenger records found");
+		    }
 		}
+
 		public Passanger getPassanger(long id) throws PassangerNotFoundException
 		{
 			Optional<Passanger> passangers=passangerRepository.findById(id);

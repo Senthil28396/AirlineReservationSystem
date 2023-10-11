@@ -1,6 +1,9 @@
 package com.springsecurity.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,9 +11,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +34,7 @@ import com.springsecurity.service.PassangerService;
 
 @RestController
 @RequestMapping("/passangers")
+@CrossOrigin(origins="http://localhost:3000")
 public class PassangerController {
 
 	@Autowired
@@ -60,10 +66,10 @@ public class PassangerController {
 	@GetMapping("/get")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public List<Passanger> getAllPassangers() throws PassangerNotFoundException {
-		return passangerService.getAllPassangers();
+		return passangerService.getAllPassengers();
 	}
 
-	@PostMapping("/login")
+	/*@PostMapping("/login")
 	public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
@@ -72,16 +78,47 @@ public class PassangerController {
 		} else {
 			throw new UsernameNotFoundException("invalid user request !");
 		}
+	}*/
+	@PostMapping("/login")
+	public Map<String, Object> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+	    Authentication authentication = authenticationManager.authenticate(
+	            new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+	    String email=authRequest.getEmail();
+	    Passanger passanger=passangerRepository.findByEmail(email);
+	    	Long id=passanger.getId();
+	    	System.out.println(id);
+	    
+	    if (authentication.isAuthenticated()) {
+	        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+	        
+	        // Check the user's roles to determine if they are an admin
+	        boolean isAdmin = userDetails.getAuthorities().stream()
+	                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
+	       
+	        // Generate a JWT token
+	        String token = jwtService.generateToken(authRequest.getEmail());
+	        
+	        // Create a response map with token and isAdmin flag
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("token", token);
+	        response.put("isAdmin", isAdmin);
+	        response.put("id", id);
+	        
+	        return response;
+	    } else {
+	        throw new UsernameNotFoundException("Invalid user request!");
+	    }
 	}
 
+
 	@GetMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
+	@PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
 	public Passanger getPassanger(@PathVariable long id) throws PassangerNotFoundException {
 		return passangerService.getPassanger(id);
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_USER')")
+	@PreAuthorize("hasAuthority('USER')")
 	public String updatePassanger(@RequestBody Passanger passanger, @PathVariable long id)
 			throws PassangerNotFoundException {
 		passangerService.updatePassanger(passanger, id);
@@ -89,10 +126,20 @@ public class PassangerController {
 	}
 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_USER')")
+	@PreAuthorize("hasAuthority('USER')")
 	public String deletePassanger(@PathVariable long id) throws PassangerNotFoundException {
 		passangerService.deletePassanger(id);
 		return "Successfully Deleted Passanger record";
 	}
 
+//	@GetMapping("/")
+//    public List<Details> searchDetails(
+//            @RequestParam(required = false) String destination,  // Change variable name from 'name' to 'destination'
+//            @RequestParam(required = false) Integer id,          // Change variable name from 'id' to 'source'
+//            @RequestParam(required = false) String source,      // Change variable name from 'age' to 'source'
+//            @RequestParam(required = false) String date) {      // Change variable name from 'city' to 'date'
+//        return dservice.searchDetails(destination, id, source, date);
+//    }
+	
+	
 }

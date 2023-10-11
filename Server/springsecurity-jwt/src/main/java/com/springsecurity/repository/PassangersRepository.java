@@ -14,6 +14,8 @@ public interface PassangersRepository extends CrudRepository<Passanger, Integer>
 
 	Optional<Passanger> findById(long id);
 
+	Passanger getPassangerById(Long userId);
+
 
 
 }

@@ -2,10 +2,13 @@ package com.springsecurity.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
@@ -13,7 +16,7 @@ import jakarta.persistence.OneToMany;
 public class Passanger {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String firstName;
 	private String lastName;
@@ -26,9 +29,16 @@ public class Passanger {
 	private String address;
 	private String passportNumber;
 	private String nationality;
-	private String role;
-	@OneToMany(cascade = CascadeType.ALL)
+	private String role="USER";
+	private boolean isAdmin;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "passenger")
+	@JsonManagedReference
 	private List<Reservation> reservations;
+	
+	/*@OneToMany(cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<Reservation> reservations;*/
 	
 	public Passanger() {
 		super();
@@ -156,5 +166,20 @@ public class Passanger {
 	public void setRole(String role) {
 		this.role = role;
 	}
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
+	/*
+	 * public List<Reservation> getReservations() { return reservations; }
+	 * 
+	 * public void setReservations(List<Reservation> reservations) {
+	 * this.reservations = reservations; }
+	 */
 
 }

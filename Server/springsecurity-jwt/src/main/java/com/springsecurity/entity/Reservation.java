@@ -1,7 +1,10 @@
 package com.springsecurity.entity;
 
 
+
 import java.sql.Timestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -15,9 +18,8 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Reservation {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
 	private int numberOfPassangers;
 	private Timestamp bookedAt;
 	private Timestamp cancelledAt;
@@ -27,6 +29,7 @@ public class Reservation {
 	private String transactionId;
 	private int totalPrice;
 	@ManyToOne
+	@JsonBackReference
 	@JoinColumn(name = "passenger_id")
 	private Passanger passenger;
 	
@@ -72,12 +75,14 @@ public class Reservation {
 		return bookedAt;
 	}
 
-	public void setBookedAt(java.sql.Timestamp timestamp) {
-		this.bookedAt = timestamp;
-	}
+	
 
 	public Timestamp getCancelledAt() {
 		return cancelledAt;
+	}
+
+	public void setBookedAt(Timestamp bookedAt) {
+		this.bookedAt = bookedAt;
 	}
 
 	public void setCancelledAt(Timestamp cancelledAt) {

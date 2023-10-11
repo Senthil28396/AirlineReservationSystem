@@ -1,6 +1,7 @@
 package com.springsecurity.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -37,14 +38,15 @@ public class SecurityConfig {
     }
    
 
-    @Bean
+    /*@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/passangers/signup","/passangers/login").permitAll()
                 .and()
-//                .requestMatchers(",HttpMethod.GET,"/flights/**")
-                .authorizeHttpRequests().requestMatchers("/passangers/**")
+                .requestMatchers(HttpMethod.GET,"/flights/**").permitAll()
+                .and()
+                .authorizeHttpRequests().requestMatchers("/passangers/**","/flights/**")
                 .authenticated().and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -52,7 +54,40 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }*/
+    
+    
+    
+    
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf().disable().cors().and()
+                .authorizeHttpRequests()
+                    .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                    .requestMatchers(HttpMethod.GET,"/swagger-ui/**","/v3/api-docs/**").permitAll()//http://localhost:8080/swagger-ui/index.html#/
+                    .requestMatchers("/passangers/signup", "/passangers/login").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/flights/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/flights/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/flights/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/flights/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/trips/**").hasAuthority("ADMIN") 
+                    .requestMatchers(HttpMethod.GET, "/trips/**").permitAll() 
+                    .requestMatchers(HttpMethod.PUT, "/reservations/**").permitAll() // Require authentication for POST
+                    .requestMatchers(HttpMethod.PUT, "/trips/**").hasAuthority("ADMIN") 
+                    .requestMatchers(HttpMethod.DELETE, "/trips/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/reservations/**").authenticated() // Require authentication for POST
+                    .requestMatchers(HttpMethod.GET, "/reservations/**").hasAuthority("ADMIN") // Require ADMIN for GET
+                    .requestMatchers(HttpMethod.DELETE, "/reservations/**").hasAuthority("USER") // Require USER for DELETE
+                    .requestMatchers("/passangers/**", "/flights/**", "/trips/**", "/reservations/**").authenticated() 
+                .and()
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
+
     
   /*  @Bean
 	SecurityFilterChain defaultSecurityFilter(HttpSecurity http) throws Exception {
