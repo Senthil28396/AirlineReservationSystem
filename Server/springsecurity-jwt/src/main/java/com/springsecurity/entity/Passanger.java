@@ -30,6 +30,7 @@ public class Passanger {
 	private String passportNumber;
 	private String nationality;
 	private String role="USER";
+	private boolean isAdmin;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "passenger")
 	@JsonManagedReference
@@ -164,6 +165,14 @@ public class Passanger {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 
 	/*

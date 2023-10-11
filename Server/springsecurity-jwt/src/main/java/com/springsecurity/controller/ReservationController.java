@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import com.springsecurity.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
+@CrossOrigin(origins="http://localhost:3000")
 public class ReservationController {
    
 	   @Autowired
@@ -37,7 +39,7 @@ public class ReservationController {
 	        return reservationService.getAllReservations();
 	    }
 
-	    @GetMapping("/{id}")
+	    @GetMapping("/{id}")	
 		@PreAuthorize("hasAuthority('USER')")
 	    public Reservation getReservationById(@PathVariable int id) {
 	        return reservationService.getReservationById(id);

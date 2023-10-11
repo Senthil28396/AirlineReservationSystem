@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.springsecurity.entity.Flight;
 import com.springsecurity.entity.Passanger;
 import com.springsecurity.entity.Trip;
+import com.springsecurity.exception.FlightNotFoundException;
 import com.springsecurity.exception.TripNotFoundException;
 import com.springsecurity.repository.FlightRepository;
 import com.springsecurity.repository.TripRepository;
@@ -37,7 +38,10 @@ public class TripService {
 		tripRepository.save(trip);
 	}*/
 	public void addTrip(Trip trip) {
-	    Flight flight = flightRepository.findByFlightName(trip.getFlight().getFlightName());
+		Optional<Flight> flight=flightRepository.findById(trip.getFlight().getId());
+		
+		
+//	    Flight flight = flightRepository.findByFlightName(trip.getFlight().getFlightName());
 	    Timestamp currentTimestamp = new Timestamp(new Date().getTime());
 
 	    // Calculate the duration based on departure and arrival times
@@ -53,7 +57,15 @@ public class TripService {
 	    // Set the calculated duration and other attributes
 	    trip.setDuration(duration);
 	    trip.setCreateAt(currentTimestamp);
-	    trip.setFlight(flight);
+	    if(flight.isPresent()) {
+	    	Flight presentFlight=flight.get();
+		    trip.setFlight(presentFlight);
+
+	    }
+	    else {
+	    	throw new FlightNotFoundException("Flight "+trip.getFlight().getId()+ "is not present ");
+	    }
+//	    trip.setFlight(flight);
 
 	    // Save the trip to the database
 	    tripRepository.save(trip);
