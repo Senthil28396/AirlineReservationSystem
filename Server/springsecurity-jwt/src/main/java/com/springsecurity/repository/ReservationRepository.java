@@ -13,7 +13,7 @@ import com.springsecurity.entity.Trip;
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
 //	List<Reservation> findByPassanger(int passanger);
-	List<Reservation> findByPassengerId(int passengerId);
+	List<Reservation> findByPassengerId(Long passengerId);
 
 
 

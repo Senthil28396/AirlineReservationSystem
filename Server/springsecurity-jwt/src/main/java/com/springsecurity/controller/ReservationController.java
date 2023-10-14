@@ -3,6 +3,7 @@ package com.springsecurity.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,6 +38,11 @@ public class ReservationController {
 	    @PreAuthorize("hasAuthority('ADMIN')")
 	    public List<Reservation> getAllReservations() {
 	        return reservationService.getAllReservations();
+	    }
+	    @GetMapping("/passenger/{passengerId}")
+	    public ResponseEntity<List<Reservation>> getReservationsByPassengerId(@PathVariable Long passengerId) {
+	        List<Reservation> reservations = reservationService.getReservationsByPassengerId(passengerId);
+	        return ResponseEntity.ok(reservations);
 	    }
 
 	    @GetMapping("/{id}")	

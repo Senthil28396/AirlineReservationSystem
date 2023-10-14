@@ -130,11 +130,19 @@ public class ReservationService {
 //    public List<Reservation> getReservationsByPassengerId(int passanger) {
 //        return reservationRepository.findByPassanger(passanger);
 //  
+    public List<Reservation> getReservationsByPassengerId(Long passengerId) {
+        if (passangersRepository.findById(passengerId).isPresent()) {
+            return reservationRepository.findByPassengerId(passengerId);
+        } else {
+            return new ArrayList<>();
+        }
+    }
 
-	public List<Reservation> getReservationsByPassengerId(int passengerId) {
 
-		return reservationRepository.findByPassengerId(passengerId);
-	}
+//	public List<Reservation> getReservationsByPassengerId(int passengerId) {
+//
+//		return reservationRepository.findByPassengerId(passengerId);
+//	}
 
 	public void deleteReservation(int id) {
 
