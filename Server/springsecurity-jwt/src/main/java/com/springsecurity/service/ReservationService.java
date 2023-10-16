@@ -1,6 +1,7 @@
 package com.springsecurity.service;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,42 +32,7 @@ public class ReservationService {
 	
 	@Autowired
 	PassangersRepository passangersRepository;
-
-	/*
-	 * public void saveReservation(Reservation reservation) {
-	 * reservation.setBookedAt(new Timestamp(System.currentTimeMillis()));
-	 * 
-	 * reservationRepository.save(reservation); }
-	 */
-
-	/*public void saveReservation(Reservation reservation) {
-		reservation.setBookedAt(new Timestamp(System.currentTimeMillis()));
-
-		Trip trip = tripRepository.findById(reservation.getTrip().getId());
-
-		if (trip != null) {
-			int pricePerSeat = trip.getPricePerSeat();
-			int numberOfPassengers = reservation.getNumberOfPassangers();
-			int totalPrice = pricePerSeat * numberOfPassengers;
-			reservation.setTotalPrice(totalPrice);
-
-			int remainingSeats = trip.getAvailableSeats() - numberOfPassengers;
-			if (remainingSeats < 0) {
-				throw new ReservationNotFoundException("Not enough available seats for this reservation.");
-			}
-
-			trip.setAvailableSeats(remainingSeats);
-
-			reservationRepository.save(reservation);
-
-			tripRepository.save(trip);
-
-		} else {
-			throw new ReservationNotFoundException("Reservation is ended");
-		}
-	}*/
-	// worked.......
-
+	
 	public void saveReservation(Reservation reservation) throws PassangerNotFoundException {
       
 
@@ -91,8 +57,8 @@ public class ReservationService {
 	            }
 
 	            trip.setAvailableSeats(remainingSeats);
-	            Timestamp currentTimestamp = new Timestamp(new Date().getTime());
-	    	    reservation.setBookedAt(currentTimestamp);
+	            LocalDate now=LocalDate.now();
+	            reservation.setBookedAt(now);
 	            reservationRepository.save(reservation);
 	            tripRepository.save(trip);
 	        } else {
@@ -127,14 +93,14 @@ public class ReservationService {
 		}
 	}
 
-//    public List<Reservation> getReservationsByPassengerId(int passanger) {
-//        return reservationRepository.findByPassanger(passanger);
-//  
 
-	public List<Reservation> getReservationsByPassengerId(int passengerId) {
-
-		return reservationRepository.findByPassengerId(passengerId);
-	}
+	public List<Reservation> getReservationsByPassengerId(Long passengerId) {
+        if (passangersRepository.findById(passengerId).isPresent()) {
+            return reservationRepository.findByPassengerId(passengerId);
+        } else {
+            return new ArrayList<>();
+        }
+    }
 
 	public void deleteReservation(int id) {
 
@@ -152,9 +118,8 @@ public class ReservationService {
 	        if (reservation.isStatus()) {
 	            reservation.setStatus(false);
 
-	            Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-	            reservation.setCancelledAt(currentTimestamp);
-
+	            LocalDate now=LocalDate.now();
+	            reservation.setCancelledAt(now);
 	            Trip trip = reservation.getTrip();
 	            if (trip != null) {
 	                int numberOfPassengers = reservation.getNumberOfPassangers();

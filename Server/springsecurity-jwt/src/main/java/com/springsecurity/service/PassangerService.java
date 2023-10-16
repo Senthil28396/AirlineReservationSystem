@@ -21,16 +21,6 @@ public class PassangerService {
 		@Autowired
 		private PassangersRepository passangerRepository;
 		
-		/*public List<Passanger> getAllPassangers() throws PassangerNotFoundException{
-			List<Passanger> passanger=(List<Passanger>) passangerRepository.findAll();
-			if(passanger!=null) {
-				return passanger;
-			}
-			else
-			{ 
-				throw new PassangerNotFoundException("no passanger records found");
-			}
-		}*/
 		public List<Passanger> getAllPassengers() throws PassangerNotFoundException {
 		    List<Passanger> passengers = (List<Passanger>) passangerRepository.findAll();
 

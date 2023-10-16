@@ -46,9 +46,6 @@ public class PassangerController {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-//    @Autowired
-//    private CustomUserDetailsService service;
-//  
 	@Autowired
 	private JwtService jwtService;
 
@@ -69,16 +66,6 @@ public class PassangerController {
 		return passangerService.getAllPassengers();
 	}
 
-	/*@PostMapping("/login")
-	public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
-		if (authentication.isAuthenticated()) {
-			return jwtService.generateToken(authRequest.getEmail());
-		} else {
-			throw new UsernameNotFoundException("invalid user request !");
-		}
-	}*/
 	@PostMapping("/login")
 	public Map<String, Object> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
 	    Authentication authentication = authenticationManager.authenticate(
@@ -131,15 +118,6 @@ public class PassangerController {
 		passangerService.deletePassanger(id);
 		return "Successfully Deleted Passanger record";
 	}
-
-//	@GetMapping("/")
-//    public List<Details> searchDetails(
-//            @RequestParam(required = false) String destination,  // Change variable name from 'name' to 'destination'
-//            @RequestParam(required = false) Integer id,          // Change variable name from 'id' to 'source'
-//            @RequestParam(required = false) String source,      // Change variable name from 'age' to 'source'
-//            @RequestParam(required = false) String date) {      // Change variable name from 'city' to 'date'
-//        return dservice.searchDetails(destination, id, source, date);
-//    }
 	
 	
 }

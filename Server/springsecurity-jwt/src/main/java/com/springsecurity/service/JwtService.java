@@ -59,14 +59,6 @@ public class JwtService {
         return createToken(claims,userName);
     }
 
-   /* private String createToken(Map<String, Object> claims, String userName) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userName)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*30))
-                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
-    }*/
     private String createToken(Map<String, Object> claims, String userName) {
         // Set the expiration to one month (30 days) from the current time
         long expirationTimeMillis = System.currentTimeMillis() + (30L * 24L * 60L * 60L * 1000L); // 30 days in milliseconds

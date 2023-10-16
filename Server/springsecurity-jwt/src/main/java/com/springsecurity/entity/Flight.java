@@ -1,11 +1,6 @@
 package com.springsecurity.entity;
 
 import java.sql.Timestamp;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -16,7 +11,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -24,7 +18,6 @@ import jakarta.persistence.OneToMany;
 public class Flight {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	//@Column(name="id")
 	private int id;
 	@Column(nullable = false, unique = true)
 	private String flightNumber;
@@ -32,9 +25,10 @@ public class Flight {
 	private int totalSeats;
 	private boolean status;
 	private Timestamp createdAt;
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "flight_id")
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "flight", orphanRemoval = true)
 	private List<Trip> trips;
+
 
 	public Flight(int id, String flightNumber, String flightName, String flightType, int totalSeats, boolean status,
 			Timestamp createdAt) {

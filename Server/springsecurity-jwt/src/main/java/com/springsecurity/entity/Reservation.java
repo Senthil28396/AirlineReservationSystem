@@ -1,19 +1,13 @@
 package com.springsecurity.entity;
 
-
-
-import java.sql.Timestamp;
-
+import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Reservation {
@@ -21,8 +15,8 @@ public class Reservation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private int numberOfPassangers;
-	private Timestamp bookedAt;
-	private Timestamp cancelledAt;
+	private LocalDate bookedAt;
+	private LocalDate cancelledAt;
 	private boolean status;
 	private String paymentStatus;
 	private String paymentMode;
@@ -41,7 +35,7 @@ public class Reservation {
 		super();
 	}
 
-	public Reservation(int id, int numberOfPassangers, Timestamp bookedAt, Timestamp cancelledAt, boolean status,
+	public Reservation(int id, int numberOfPassangers, LocalDate bookedAt, LocalDate cancelledAt, boolean status,
 			String paymentStatus, String paymentMode, String transactionId, int totalPrice) {
 		super();
 		this.id = id;
@@ -71,21 +65,21 @@ public class Reservation {
 		this.numberOfPassangers = numberOfPassangers;
 	}
 
-	public Timestamp getBookedAt() {
+	public LocalDate getBookedAt() {
 		return bookedAt;
 	}
 
 	
 
-	public Timestamp getCancelledAt() {
+	public LocalDate getCancelledAt() {
 		return cancelledAt;
 	}
 
-	public void setBookedAt(Timestamp bookedAt) {
+	public void setBookedAt(LocalDate bookedAt) {
 		this.bookedAt = bookedAt;
 	}
 
-	public void setCancelledAt(Timestamp cancelledAt) {
+	public void setCancelledAt(LocalDate cancelledAt) {
 		this.cancelledAt = cancelledAt;
 	}
 

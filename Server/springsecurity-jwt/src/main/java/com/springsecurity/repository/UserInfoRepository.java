@@ -8,7 +8,6 @@ import com.springsecurity.entity.Passanger;
 import java.util.Optional;
 
 public interface UserInfoRepository extends JpaRepository<Passanger, Integer> {
-//    Optional<UserInfo> findByName(String username);
 
 	Optional<Passanger> findByEmail(String email);
 

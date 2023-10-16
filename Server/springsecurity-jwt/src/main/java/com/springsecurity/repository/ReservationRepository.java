@@ -8,12 +8,10 @@ import org.springframework.stereotype.Repository;
 import com.springsecurity.entity.Reservation;
 import com.springsecurity.entity.Trip;
 
-
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
-//	List<Reservation> findByPassanger(int passanger);
-	List<Reservation> findByPassengerId(int passengerId);
+	List<Reservation> findByPassengerId(Long passengerId);
 
 
 

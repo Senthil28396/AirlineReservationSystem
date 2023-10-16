@@ -22,7 +22,6 @@ import com.springsecurity.entity.Trip;
 import com.springsecurity.service.TripService;
 
 
-
 @RestController
 @RequestMapping("/trips")
 @CrossOrigin(origins="http://localhost:3000")

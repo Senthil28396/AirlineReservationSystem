@@ -3,6 +3,7 @@ package com.springsecurity.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,24 +40,17 @@ public class ReservationController {
 	        return reservationService.getAllReservations();
 	    }
 
-	    @GetMapping("/{id}")	
-		@PreAuthorize("hasAuthority('USER')")
-	    public Reservation getReservationById(@PathVariable int id) {
-	        return reservationService.getReservationById(id);
+	    @GetMapping("/{passengerId}")
+	    public ResponseEntity<List<Reservation>> getReservationsByPassengerId(@PathVariable Long passengerId) {
+	        List<Reservation> reservations = reservationService.getReservationsByPassengerId(passengerId);
+	        return ResponseEntity.ok(reservations);
 	    }
 	    
 	    @PutMapping("/{id}")
 	    public Reservation updateReservationById(@PathVariable int id) {
 	        return reservationService.updateReservationById(id);
 	    }
-	    
-
-	   /* @GetMapping("/passenger/{passanger}")
-//		@PreAuthorize("hasAuthority('ROLE_USER')")
-	    public List<Reservation> getReservationsByPassenger(@PathVariable int passanger) {
-	        return reservationService.getReservationsByPassengerId(passanger);
-	    }*/						//not yet worked
-	    
+	
 	    @DeleteMapping("/{id}")
 	    @PreAuthorize("hasAuthority('USER')")
 	    public String deleteReservation(@PathVariable int id) {

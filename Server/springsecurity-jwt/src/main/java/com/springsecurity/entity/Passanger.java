@@ -36,10 +36,6 @@ public class Passanger {
 	@JsonManagedReference
 	private List<Reservation> reservations;
 	
-	/*@OneToMany(cascade = CascadeType.ALL)
-	@JsonManagedReference
-	private List<Reservation> reservations;*/
-	
 	public Passanger() {
 		super();
 	}
@@ -59,7 +55,6 @@ public class Passanger {
 		this.address = address;
 		this.passportNumber = passportNumber;
 		this.nationality = nationality;
-//		this.token = token;
 		this.role = role;
 	}
 
@@ -151,14 +146,6 @@ public class Passanger {
 		this.nationality = nationality;
 	}
 
-//	public String getToken() {
-//		return token;
-//	}
-//
-//	public void setToken(String token) {
-//		this.token = token;
-//	}
-
 	public String getRole() {
 		return role;
 	}
@@ -174,12 +161,5 @@ public class Passanger {
 	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
-
-	/*
-	 * public List<Reservation> getReservations() { return reservations; }
-	 * 
-	 * public void setReservations(List<Reservation> reservations) {
-	 * this.reservations = reservations; }
-	 */
 
 }

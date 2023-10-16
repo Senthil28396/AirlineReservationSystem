@@ -35,29 +35,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserInfoUserDetailsService();
-    }
-   
-
-    /*@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/passangers/signup","/passangers/login").permitAll()
-                .and()
-                .requestMatchers(HttpMethod.GET,"/flights/**").permitAll()
-                .and()
-                .authorizeHttpRequests().requestMatchers("/passangers/**","/flights/**")
-                .authenticated().and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }*/
-    
-    
-    
+    } 
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -76,7 +54,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT, "/trips/**").hasAuthority("ADMIN") 
                     .requestMatchers(HttpMethod.DELETE, "/trips/**").hasAuthority("ADMIN")
                     .requestMatchers(HttpMethod.POST, "/reservations/**").authenticated() // Require authentication for POST
-                    .requestMatchers(HttpMethod.GET, "/reservations/**").hasAuthority("ADMIN") // Require ADMIN for GET
+                    .requestMatchers(HttpMethod.GET, "/reservations/**").hasAuthority("USER") // Require ADMIN for GET
                     .requestMatchers(HttpMethod.DELETE, "/reservations/**").hasAuthority("USER") // Require USER for DELETE
                     .requestMatchers("/passangers/**", "/flights/**", "/trips/**", "/reservations/**").authenticated() 
                 .and()
@@ -89,22 +67,6 @@ public class SecurityConfig {
     }
 
     
-  /*  @Bean
-	SecurityFilterChain defaultSecurityFilter(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests().anyRequest()
-		.permitAll();
-		http.formLogin();
-		http.httpBasic();
-		http.csrf().disable();
-		return http.build();
-	}*/
-
-   
-
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -48,24 +48,6 @@ public class FlightService {
 			throw new FlightNotFoundException("No flight records found");
 		}
 	}
-	/*public void updateFlight(Flight flight,int id) {
-		Optional<Flight> fly=flightRepository.findById(id);
-		if(fly.isPresent()) {
-			Flight flights=fly.get();
-			
-			flights.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-			flights.setFlightName(flight.getFlightName());
-			flights.setFlightNumber(flight.getFlightNumber());
-			flights.setStatus(flight.isStatus());
-			flights.setTotalSeats(flight.getTotalSeats());
-			
-			flightRepository.save(flights);
-		}
-		else
-		{
-			throw new FlightNotFoundException("not found flight id:"+id);
-		}
-	}*/
 	public void updateFlight(Flight flight, int id) {
 	    Optional<Flight> optionalFlight = flightRepository.findById(id);
 	    if (optionalFlight.isPresent()) {
@@ -98,19 +80,4 @@ public class FlightService {
 			throw new FlightNotFoundException("no records found for this id"+id);
 		}
 	}
-	/*public static String timeDiff(LocalTime depatureTime,LocalTime arrivalTime) {
-		long hours = ChronoUnit.HOURS.between(depatureTime, arrivalTime);
-	    
-	    long minutes
-	        = ChronoUnit.MINUTES.between(depatureTime, arrivalTime) % 60;
-
-	    long seconds
-	        = ChronoUnit.SECONDS.between(depatureTime, arrivalTime) % 60;
-
-	String difference=
-	        hours + " hours " + minutes
-	        + " minutes " + seconds + " seconds.";
-	return difference;
-	}*/
-
 }

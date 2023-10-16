@@ -15,7 +15,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -40,8 +39,9 @@ public class Trip {
 	@JoinColumn(name = "flight_id")
 	private Flight flight;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "trip", orphanRemoval = true)
 	private List<Reservation> reservations;
+
 
 	public Trip() {
 		super();
